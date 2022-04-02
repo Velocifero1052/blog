@@ -15,6 +15,7 @@ import ru.bagration.spring.utils.ResponseData;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,7 +49,14 @@ public class PublicationServiceImplementation implements PublicationService {
         var publicationsPage = publicationRepository
                 .findAll(getFilteringSpecification(authorIds, themeIds), pageable);
 
-        return ResponseEntity.ok(ok(publicationsPage));
+        var data = new HashMap<String, Object>();
+        data.put("page", publicationsPage.getNumber());
+        data.put("totalPages", publicationsPage.getTotalPages());
+        data.put("size", publicationsPage.getSize());
+        data.put("totalElements", publicationsPage.getTotalElements());
+        data.put("content", publicationsPage.getContent().stream().map(this::mapToDto).collect(Collectors.toList()));
+
+        return ResponseEntity.ok(ok(data));
     }
 
 
@@ -83,10 +91,20 @@ public class PublicationServiceImplementation implements PublicationService {
     private PublicationDto mapToDto(Publication publication){
         var dto = new PublicationDto();
         dto.setId(publication.getPublicId());
-        dto.setAuthor("Michael Jackson");
-        dto.setAuthorId(UUID.randomUUID().toString());
+        if(authorRepository.existsById(publication.getAuthorId())){
+            var author = authorRepository.getById(publication.getAuthorId());
+            dto.setAuthor(author.getFirstName() + " " + author.getLastName());
+            dto.setAuthorId(author.getPublicId());
+        }
+
         dto.setTitle(publication.getTitle());
-        dto.setTheme("War");
+
+        if(themeRepository.existsById(publication.getThemeId())){
+            var theme = themeRepository.getById(publication.getThemeId());
+            dto.setTheme(theme.getName());
+            dto.setThemeId(theme.getPublicId());
+        }
+
         dto.setContent(publication.getContent());
         return dto;
     }

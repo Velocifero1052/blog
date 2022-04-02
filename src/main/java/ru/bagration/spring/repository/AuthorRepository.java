@@ -14,6 +14,8 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
 
     Optional<Author> findByPublicId(String id);
 
+    Boolean existsByPublicId(String publicId);
+
     @Query("select a.id from Author a where lower(a.firstName) like :name or lower(a.lastName) like :name")
     List<Long> findIdsByName(String name);
 

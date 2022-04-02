@@ -9,5 +9,6 @@ public class PublicationDto {
     private String authorId;
     private String title;
     private String theme;
+    private String themeId;
     private String content;
 }
