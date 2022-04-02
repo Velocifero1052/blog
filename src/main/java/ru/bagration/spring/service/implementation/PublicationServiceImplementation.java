@@ -3,24 +3,27 @@ package ru.bagration.spring.service.implementation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.bagration.spring.dto.PublicationDto;
 import ru.bagration.spring.entity.Publication;
+import ru.bagration.spring.exception.definition.BadRequestException;
 import ru.bagration.spring.repository.AuthorRepository;
 import ru.bagration.spring.repository.PublicationRepository;
 import ru.bagration.spring.repository.ThemeRepository;
 import ru.bagration.spring.service.PublicationService;
-import ru.bagration.spring.utils.ResponseData;
+import ru.bagration.spring.utils.Utility;
 
 import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static ru.bagration.spring.utils.ResponseData.ok;
+import static ru.bagration.spring.utils.ResponseData.response;
+
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +33,13 @@ public class PublicationServiceImplementation implements PublicationService {
     private final ThemeRepository themeRepository;
     private final AuthorRepository authorRepository;
 
-    public ResponseData getAllPublications(){
+    public ResponseEntity<?> getAllPublications(){
 
         var publications = publicationRepository.findAll();
         var dtoS = publications.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
-        return ok(dtoS);
+        return response(dtoS);
     }
 
     public ResponseEntity<?> getData(String authorName, String themeName, Pageable pageable){
@@ -56,7 +59,27 @@ public class PublicationServiceImplementation implements PublicationService {
         data.put("totalElements", publicationsPage.getTotalElements());
         data.put("content", publicationsPage.getContent().stream().map(this::mapToDto).collect(Collectors.toList()));
 
-        return ResponseEntity.ok(ok(data));
+        return response(data);
+    }
+
+    public ResponseEntity<?> createPublication(String authorId, String themeId, String title, String content){
+
+        if(!authorRepository.existsByPublicId(authorId))
+            throw new BadRequestException("no such author", HttpStatus.BAD_REQUEST);
+
+        if(!themeRepository.existsByPublicId(themeId))
+            throw new BadRequestException("no such theme", HttpStatus.BAD_REQUEST);
+
+        var publication = new Publication();
+        publication.setPublicId(Utility.generateUuid());
+        publication.setAuthorId(authorRepository.getIdByPublicId(authorId));
+        publication.setThemeId(themeRepository.getIdByPublicId(themeId));
+        publication.setTitle(title);
+        publication.setContent(content);
+
+        publicationRepository.save(publication);
+
+        return response(Collections.singletonMap("message", "success"));
     }
 
 

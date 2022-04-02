@@ -3,17 +3,16 @@ package ru.bagration.spring.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.bagration.spring.dto.NewPublicationDto;
 import ru.bagration.spring.service.PublicationService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/publication")
 public class PublicationController {
-
 
     private final PublicationService publicationService;
 
@@ -26,10 +25,14 @@ public class PublicationController {
 
     @GetMapping("/feed")
     public ResponseEntity<?> getFeed(){
-        return ResponseEntity.ok(publicationService.getAllPublications());
+        return publicationService.getAllPublications();
     }
 
-
+    @PostMapping
+    public ResponseEntity<?> addNewPublication(@Valid @RequestBody NewPublicationDto dto){
+        return publicationService.createPublication(dto.getAuthorId(), dto.getThemeId(),
+                dto.getTitle(), dto.getContent());
+    }
 
 
 

@@ -18,4 +18,9 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     boolean existsByNameIgnoreCase(String name);
 
+    boolean existsByPublicId(String id);
+
+    @Query("select t.id from Theme t where t.publicId = :publicId")
+    Long getIdByPublicId(String publicId);
+
 }

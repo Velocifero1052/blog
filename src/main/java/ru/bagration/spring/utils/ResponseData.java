@@ -1,40 +1,63 @@
 package ru.bagration.spring.utils;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
-import java.util.HashMap;
 
-@Data
-public class ResponseData{
-
-    private Object data;
+@Getter
+@Setter
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties({"class_"})
+public class ResponseData<T> {
+    private T data;
     private String errorMessage;
-    private Long timeStamp;
+    private Long timestamp;
 
-    public static ResponseData ok(Object data){
-        var responseData = new ResponseData();
-        responseData.setData(data);
-        responseData.setErrorMessage("");
-        responseData.setTimeStamp(System.currentTimeMillis());
-        return responseData;
+    public Class<? extends ResponseData> getClass_(){
+        return this.getClass();
     }
 
-    public static ResponseData savedSuccess(String message){
-        var responseData = new ResponseData();
-        var messageMap = Collections.singletonMap("successMessage", message);
-        responseData.setData(messageMap);
-        responseData.setErrorMessage("");
-        responseData.setTimeStamp(System.currentTimeMillis());
-        return responseData;
+    public ResponseData(T data) {
+        this.data = data;
+        this.errorMessage = "";
+        this.timestamp = System.currentTimeMillis();
     }
 
-    public static ResponseData responseBadRequest(String errorMessage){
-        var responseData = new ResponseData();
-        responseData.setErrorMessage(errorMessage);
-        responseData.setTimeStamp(System.currentTimeMillis());
-        return responseData;
+    public ResponseData(String successMessage) {
+        this.errorMessage = "";
+        this.data = (T) successMessage;
+        this.timestamp = System.currentTimeMillis();
     }
 
+    public ResponseData(T data, String errorMessage) {
+        this.data = data;
+        this.errorMessage = errorMessage;
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public ResponseData() {
+        this.errorMessage = "";
+        this.timestamp = System.currentTimeMillis();
+    }
+
+    public static <T> ResponseEntity<ResponseData<T>> response(T data) {
+        return ResponseEntity.ok(new ResponseData<>(data));
+    }
+
+    public static <T> ResponseEntity<ResponseData<T>> response(ResponseData<T> responseData, HttpStatus status) {
+        return new ResponseEntity<>(responseData, status);
+    }
+
+    public static <T> ResponseEntity<ResponseData<T>> response(String errorMessage, HttpStatus httpStatus) {
+        return new ResponseEntity<>(new ResponseData<>(null, errorMessage), httpStatus);
+    }
+
+    public static <T> ResponseEntity<ResponseData<T>> responseBadRequest(String errorMessage) {
+        return new ResponseEntity<>(new ResponseData<>(null, errorMessage), HttpStatus.BAD_REQUEST);
+    }
 
 }

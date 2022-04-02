@@ -6,4 +6,6 @@ public interface ThemeService {
 
     ResponseEntity<?> addNewTheme(String name, Integer ageCategory);
 
+    ResponseEntity<?> allThemes();
+
 }

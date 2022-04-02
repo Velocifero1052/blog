@@ -19,4 +19,9 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
     @Query("select a.id from Author a where lower(a.firstName) like :name or lower(a.lastName) like :name")
     List<Long> findIdsByName(String name);
 
+    boolean existsByFirstNameIgnoreCaseOrLastNameIgnoreCase(String firstName, String lastName);
+
+    @Query("select a.id from Author a where a.publicId = :publicId")
+    Long getIdByPublicId(String publicId);
+
 }
