@@ -1,4 +1,4 @@
-package ru.bagration.spring.dto;
+package ru.bagration.spring.dto.publication;
 
 import lombok.Data;
 
@@ -16,9 +16,9 @@ public class NewPublicationDto {
     @NotEmpty
     @NotBlank
     private String themeId;
-    @NotNull
-    @NotEmpty
-    @NotBlank
+    @NotNull(message = "publication.title.require.not.null")
+    @NotEmpty(message = "publication.title.require.not.empty")
+    @NotBlank(message = "publication.title.require.not.blank")
     private String title;
     @NotNull
     @NotEmpty

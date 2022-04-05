@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.bagration.spring.dto.ThemeListDto;
+import ru.bagration.spring.dto.theme.ThemeListDto;
 import ru.bagration.spring.entity.Theme;
 import ru.bagration.spring.exception.definition.BadRequestException;
 import ru.bagration.spring.repository.ThemeRepository;

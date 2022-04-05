@@ -1,4 +1,4 @@
-package ru.bagration.spring.dto;
+package ru.bagration.spring.dto.publication;
 
 import lombok.Data;
 

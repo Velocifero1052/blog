@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bagration.spring.dto.CreateAuthorDto;
+import ru.bagration.spring.dto.author.CreateAuthorDto;
 import ru.bagration.spring.service.AuthorService;
 
 import javax.validation.Valid;

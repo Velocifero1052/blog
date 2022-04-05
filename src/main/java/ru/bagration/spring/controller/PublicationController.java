@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bagration.spring.dto.NewPublicationDto;
+import ru.bagration.spring.dto.publication.NewPublicationDto;
 import ru.bagration.spring.service.PublicationService;
 
 import javax.validation.Valid;
@@ -33,7 +33,5 @@ public class PublicationController {
         return publicationService.createPublication(dto.getAuthorId(), dto.getThemeId(),
                 dto.getTitle(), dto.getContent());
     }
-
-
 
 }

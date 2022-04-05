@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ru.bagration.spring.dto.PublicationDto;
+import ru.bagration.spring.dto.publication.PublicationDto;
 import ru.bagration.spring.entity.Publication;
 import ru.bagration.spring.exception.definition.BadRequestException;
 import ru.bagration.spring.repository.AuthorRepository;

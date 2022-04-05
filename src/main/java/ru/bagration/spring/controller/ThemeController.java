@@ -3,7 +3,7 @@ package ru.bagration.spring.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bagration.spring.dto.ThemeDto;
+import ru.bagration.spring.dto.theme.ThemeDto;
 import ru.bagration.spring.service.ThemeService;
 
 import javax.validation.Valid;
